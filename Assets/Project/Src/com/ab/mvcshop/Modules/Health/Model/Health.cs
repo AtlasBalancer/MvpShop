@@ -6,6 +6,8 @@ namespace com.ab.mvcshop.modules.health.model
     [Serializable]
     public class Health : AmountModel<int>
     {
+        public Health() : base(0) { }
+        
         public Health(int amount) 
             : base(amount) { }
 

@@ -22,13 +22,11 @@ namespace com.ab.mvcshop.modules.location
 
         void DevProfile()
         {
-#if DEVELOPMENT
             if (!_settings.Default.OverrideModel)
                 return;
 
             var dataService = Container.Resolve<MockPlayerDataService>();
             dataService.Registry<Location>(_settings.Default.Model);
-#endif
         }
 
         [Serializable]

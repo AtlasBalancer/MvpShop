@@ -1,7 +1,6 @@
+using TMPro;
 using System;
 using com.ab.mvcshop.core.mvc;
-using TMPro;
-using UnityEngine;
 
 namespace com.ab.mvcshop.modules.vip.interaction
 {

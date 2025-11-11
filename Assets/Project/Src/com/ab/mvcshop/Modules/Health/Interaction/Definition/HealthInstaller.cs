@@ -9,7 +9,7 @@ namespace com.ab.mvcshop.modules.health.interacton
     public class HealthInstaller : MonoInstaller
     {
         public Settings _settings;
-        
+
         public override void InstallBindings()
         {
             DevProfile();
@@ -22,15 +22,13 @@ namespace com.ab.mvcshop.modules.health.interacton
 
         void DevProfile()
         {
-#if DEVELOPMENT
             if (!_settings.Default.OverrideModel)
                 return;
 
             var dataService = Container.Resolve<MockPlayerDataService>();
             dataService.Registry<Health>(_settings.Default.Model);
-#endif
         }
-        
+
         [Serializable]
         public class Settings
         {

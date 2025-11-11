@@ -1,9 +1,8 @@
-using System;
-using System.Linq;
-using com.ab.mvcshop.core.mvc;
 using R3;
-using UnityEngine;
+using System;
 using Zenject;
+using UnityEngine;
+using com.ab.mvcshop.core.mvc;
 
 namespace com.ab.mvcshop.modules.location
 {

@@ -46,7 +46,7 @@ namespace com.ab.mvcshop.modules.health.model
         void UpdateAmount(int amount)
         {
             Amount = amount;
-            _persistent.CommitAsync(_model);
+            _persistent.Commit(_model.Value);
         }
 
         public bool CanExecute(CommandContext ctx, IModel model)

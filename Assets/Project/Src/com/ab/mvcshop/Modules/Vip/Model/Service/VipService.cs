@@ -45,12 +45,11 @@ namespace com.ab.mvcshop.modules.vip.model
             Start();
         }
 
-
         public void Start()
         {
             Stop();
             _cts = new CancellationTokenSource();
-            RunLoopAsync(_cts.Token).Forget();
+            Timer(_cts.Token).Forget();
         }
 
         public void Stop()
@@ -60,35 +59,30 @@ namespace com.ab.mvcshop.modules.vip.model
             _cts = null;
         }
 
-        async UniTaskVoid RunLoopAsync(CancellationToken ct)
+        async UniTaskVoid Timer(CancellationToken ct)
         {
-            try
+            while (!ct.IsCancellationRequested)
             {
-                while (!ct.IsCancellationRequested)
+                if (Amount <= TimeSpan.Zero)
                 {
-                    if (Amount <= TimeSpan.Zero)
-                    {
-                        await UniTask.Delay(_step);
-                        continue;
-                    }
-
-                    await UniTask.Delay(_step, _delayType, PlayerLoopTiming.FixedUpdate, ct);
-                    var left = Amount - _step;
-                    
-                    Amount = left > TimeSpan.Zero ? left : TimeSpan.Zero;
+                    await UniTask.Delay(_step);
+                    continue;
                 }
-            }
-            catch (OperationCanceledException)
-            {
+
+                await UniTask.Delay(_step, _delayType, PlayerLoopTiming.FixedUpdate, ct);
+                var left = Amount - _step;
+
+                Amount = left > TimeSpan.Zero ? left : TimeSpan.Zero;
             }
         }
-        
+
         public TimeSpan Amount
         {
             get => _model.Value.Amount;
             private set
             {
-                if (value == _model.Value.Amount) return;
+                if (value == _model.Value.Amount) 
+                    return;
 
                 _model.Value.Amount = value;
                 _model.OnNext(_model.Value);
@@ -98,14 +92,14 @@ namespace com.ab.mvcshop.modules.vip.model
 
         public void ChangeAmount(TimeSpan valueToChange)
         {
-            _model.Value.Amount += valueToChange; 
+            _model.Value.Amount += valueToChange;
             UpdateAmount(_model.Value.Amount);
         }
 
         void UpdateAmount(TimeSpan amount)
         {
             Amount = amount;
-            _persistent.CommitAsync(_model);
+            _persistent.Commit(_model);
         }
 
         public bool CanExecute(CommandContext ctx, IModel model) =>

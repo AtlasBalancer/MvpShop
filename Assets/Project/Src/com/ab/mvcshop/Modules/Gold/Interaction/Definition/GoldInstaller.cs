@@ -1,7 +1,7 @@
 using System;
+using com.ab.mvcshop.core.playerdata;
 using Zenject;
 using UnityEngine;
-using com.ab.mvcshop.core.playerdata;
 using com.ab.mvcshop.modules.gold.model;
 using com.ab.mvcshop.modules.gold.interaction;
 using com.ab.mvcshop.modules.gold.signals;
@@ -24,13 +24,11 @@ namespace com.ab.mvcshop.modules.gold.definition
 
         void DevProfile()
         {
-#if DEVELOPMENT
             if (!_settings.Default.OverrideModel)
                 return;
 
             var dataService = Container.Resolve<MockPlayerDataService>();
             dataService.Registry<Gold>(_settings.Default.Model);
-#endif
         }
 
         [Serializable]

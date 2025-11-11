@@ -6,6 +6,9 @@ namespace com.ab.mvcshop.modules.location
     [Serializable]
     public class Location : IModel
     {
+        public Location() => 
+            Title = default;
+
         public string Title;
 
         public Location(string title) => 

@@ -45,7 +45,6 @@ namespace com.ab.mvcshop.modules.vip.interaction
         public override void Unsubscribe(SignalBus signals) =>
             Signals.Unsubscribe<VipChangeSignal>(OnChangeAmount);
 
-
         public void OnChangeAmount(VipChangeSignal signal)
         {
             var valueToChange = signal.ValueToChange;

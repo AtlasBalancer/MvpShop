@@ -23,13 +23,11 @@ namespace com.ab.mvcshop.modules.vip.interaction
 
         void DevProfile()
         {
-#if DEVELOPMENT
             if (!_settings.Default.OverrideModel)
                 return;
 
             var dataService = Container.Resolve<MockPlayerDataService>();
             dataService.Registry<Vip>(new Vip(TimeSpan.FromSeconds(_settings.Default.SecondsVip)));
-#endif
         }
 
         [Serializable]

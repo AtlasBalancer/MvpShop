@@ -68,7 +68,7 @@ namespace com.ab.mvcshop.modules.location
         {
             Location location = new(title);
             _model.OnNext(location);
-            _persistent.CommitAsync(location);
+            _persistent.Commit(location);
         }
 
         public bool CanExecute(CommandContext ctx, IModel model)

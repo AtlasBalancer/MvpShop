@@ -6,8 +6,9 @@ namespace com.ab.mvcshop.modules.gold.model
     [Serializable]
     public class Gold : AmountModel<int>
     {
-        public Gold(int amount) : base(amount)
-        { }
+        public Gold() : base(0) { }
+
+        public Gold(int amount) : base(amount) { }
 
         public override void Combine(IModel model)
         {

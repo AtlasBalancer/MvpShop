@@ -31,12 +31,8 @@ namespace com.ab.mvcshop.core.definition
 
         void DevProfile()
         {
-#if DEVELOPMENT
             Container.BindInterfacesAndSelfTo<MockPlayerDataService>().AsSingle();
             Container.BindInstance(_settings.Mock);
-#else
-            Container.Bind<IPlayerDataService>().To<MockPlayerDataService>().AsSingle();
-#endif
         }
 
         [Serializable]
