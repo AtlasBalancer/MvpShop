@@ -27,7 +27,7 @@ Cцена: Assets\Project\Content\Scenes**Shop**
       - **Command/** — команды и абстракции для ScriptableObject
       - **Definition/** — DI-инсталлеры
       - **Localization/** — Unity Localization имплементация
-      - **MVC/** — базовые контроллеры/модели/вью
+      - **MVP/** — базовые контроллеры/модели/вью
       - **PlayerData/** — профиль, сохранения, репозитории
       - **SceneTransition/** — прелоадер и ZenjectSceneLoader
     - **Modules/** — домены, зависимые только от Core
