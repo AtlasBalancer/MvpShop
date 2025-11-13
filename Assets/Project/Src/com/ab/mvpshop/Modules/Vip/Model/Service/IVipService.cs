@@ -4,8 +4,12 @@ using com.ab.mvpshop.core.playerdata;
 
 namespace com.ab.mvpshop.modules.vip.model
 {
-    public interface IVipService: INotifyModelChanged<Vip>, ICommandCanExecute, IDisposable
+    public interface IVipService: INotifyModelChanged<Vip>, ICommandCanExecute
     {
-        void ChangeAmount(TimeSpan valueToChange);
+        bool IsVipActive();
+        
+        void ExtendExpirationTime(TimeSpan valueToChange);
+
+        TimeSpan GetRemainingTime();
     }
 }

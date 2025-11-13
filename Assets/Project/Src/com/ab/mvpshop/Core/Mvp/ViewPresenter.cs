@@ -40,13 +40,13 @@ namespace com.ab.mvpshop.core.mvp
             UnBindView(View);
         }
         
-        public abstract void BindView(TView view);
+        public virtual void BindView(TView view){}
         public virtual void UnBindView(TView view){}
 
         public virtual void Subscribe(SignalBus signals){}
         public virtual void Unsubscribe(SignalBus signals){}
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             UnBindView(View);
             Unsubscribe(Signals);

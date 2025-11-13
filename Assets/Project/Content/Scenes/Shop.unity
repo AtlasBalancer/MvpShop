@@ -480,10 +480,9 @@ MonoBehaviour:
     Default:
       SecondsVip: 10
       OverrideModel: 1
-    Service:
+    Controller:
       UseUnscaled: 1
       StepMilliseconds: 1000
-    Controller:
       IncreaseSecondsToChange: 10
       PanelRoot: {fileID: 814350561}
       ViewAddressKey: VipPanel

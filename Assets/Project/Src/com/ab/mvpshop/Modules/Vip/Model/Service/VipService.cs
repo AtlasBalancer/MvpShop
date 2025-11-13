@@ -1,7 +1,5 @@
 using System;
 using Rx = R3;
-using System.Threading;
-using Cysharp.Threading.Tasks;
 using com.ab.mvpshop.core.command;
 using com.ab.mvpshop.core.mvp;
 using com.ab.mvpshop.core.playerdata;
@@ -16,11 +14,6 @@ namespace com.ab.mvpshop.modules.vip.model
 
         readonly Rx.BehaviorSubject<Vip> _model;
         public Rx.Observable<Vip> ModelChanged => _model;
-
-        readonly TimeSpan _step;
-        readonly DelayType _delayType;
-
-        CancellationTokenSource _cts;
 
         public VipService(
             Settings settings,
@@ -37,68 +30,47 @@ namespace com.ab.mvpshop.modules.vip.model
 
             commandInvoker.Registry(typeof(Vip), this);
 
-            _step = _settings.StepMilliseconds > 0
-                ? TimeSpan.FromMilliseconds(250)
-                : TimeSpan.FromMilliseconds(_settings.StepMilliseconds);
-            _delayType = _settings.UseUnscaled ? DelayType.UnscaledDeltaTime : DelayType.DeltaTime;
-
-            Start();
         }
 
-        public void Start()
+        public DateTimeOffset ExpiredTime
         {
-            Stop();
-            _cts = new CancellationTokenSource();
-            Timer(_cts.Token).Forget();
-        }
-
-        public void Stop()
-        {
-            _cts?.Cancel();
-            _cts?.Dispose();
-            _cts = null;
-        }
-
-        async UniTaskVoid Timer(CancellationToken ct)
-        {
-            while (!ct.IsCancellationRequested)
-            {
-                if (Amount <= TimeSpan.Zero)
-                {
-                    await UniTask.Delay(_step);
-                    continue;
-                }
-
-                await UniTask.Delay(_step, _delayType, PlayerLoopTiming.FixedUpdate, ct);
-                var left = Amount - _step;
-
-                Amount = left > TimeSpan.Zero ? left : TimeSpan.Zero;
-            }
-        }
-
-        public TimeSpan Amount
-        {
-            get => _model.Value.Amount;
+            get => _model.Value.ExpirationTime;
             private set
             {
-                if (value == _model.Value.Amount) 
+                if (value == _model.Value.ExpirationTime)
                     return;
 
-                _model.Value.Amount = value;
+                _model.Value.ExpirationTime = value;
                 _model.OnNext(_model.Value);
                 _notifyModel.OnChange();
             }
         }
 
-        public void ChangeAmount(TimeSpan valueToChange)
+        public void ExtendExpirationTime(TimeSpan valueToChange)
         {
-            _model.Value.Amount += valueToChange;
-            UpdateAmount(_model.Value.Amount);
+            var nowUtc = DateTimeOffset.UtcNow;
+            var expirationTime = _model.Value.ExpirationTime;
+
+            if (IsVipActive())
+                UpdateExpiredTime(expirationTime + valueToChange);
+            else
+                UpdateExpiredTime(nowUtc + valueToChange);
         }
 
-        void UpdateAmount(TimeSpan amount)
+        public TimeSpan GetRemainingTime()
         {
-            Amount = amount;
+            if(!IsVipActive())
+                return TimeSpan.Zero;
+
+            return DateTimeOffset.UtcNow - _model.Value.ExpirationTime;
+        }
+
+        public bool IsVipActive() =>
+            ExpiredTime.Ticks > 0 && ExpiredTime > DateTimeOffset.UtcNow;
+
+        void UpdateExpiredTime(DateTimeOffset newTime)
+        {
+            ExpiredTime = newTime;
             _persistent.Commit(_model);
         }
 
@@ -107,12 +79,6 @@ namespace com.ab.mvpshop.modules.vip.model
 
 
         [Serializable]
-        public class Settings
-        {
-            public bool UseUnscaled = true;
-            public int StepMilliseconds = 2000;
-        }
-
-        public void Dispose() => Stop();
+        public class Settings { }
     }
 }
