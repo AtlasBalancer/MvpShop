@@ -1,4 +1,4 @@
-# MVC Shop
+# MVP Shop
 
 ## Как запустить
 Cцена: Assets\Project\Content\Scenes**Shop** 
